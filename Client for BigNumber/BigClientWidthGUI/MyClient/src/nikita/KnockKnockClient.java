@@ -48,19 +48,16 @@ public class KnockKnockClient extends JFrame{
 		super("BigNumber");
 		setLayout(new FlowLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		JLabel labelForSocket = new JLabel("Введите имя хоста");
+		JLabel labelForSocket = new JLabel("Р’РІРµРґРёС‚Рµ РёРјСЏ С…РѕСЃС‚Р°");
 		tfForSocket = new JTextField(20);
-		JLabel labelForPort = new JLabel("Введите имя хоста");
+		JLabel labelForPort = new JLabel("Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ РїРѕСЂС‚Р°");
 		tfForPort = new JTextField(4);
-		JButton button = new JButton("подключиться");
+		JButton button = new JButton("РџРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ");
 		button.addActionListener(new ButtonAction());
-		String text= "Тут будут появляться результаты работы\n";
+		String text= "РўСѓС‚ Р±СѓРґСѓС‚ РїРѕСЏРІР»СЏС‚СЊСЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚С‹ СЂР°Р±РѕС‚С‹\n";
 		ta = new JTextArea(text);
 		add(labelForSocket);
 		add(tfForSocket);
-		
-		
-		
 		add(labelForPort);
 		add(tfForPort);
 		add(button);
@@ -74,14 +71,10 @@ public class KnockKnockClient extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e1) {
-			
-			
 			String myserver ="";
 			myserver = tfForSocket.getText().trim(); // notebook_asus
-				
 	    	int port = Integer.parseInt(tfForPort.getText().trim());
-	    	
-	      new MainJob(myserver, port).start();			
+	      	new MainJob(myserver, port).start();			
 		}
 			
 	}
@@ -106,14 +99,14 @@ public class KnockKnockClient extends JFrame{
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					ta.setText(ta.getText() + "Соединение...\n");
+					ta.setText(ta.getText() + "РЎРѕРµРґРёРЅРµРЅРёРµ...\n");
 				}
 			});
 	        
 	        
 	        try {
 	            kkSocket = new Socket(myserver, port);
-	         
+				
 	            is=kkSocket.getInputStream();
 	            os=kkSocket.getOutputStream();
 	        } catch (UnknownHostException e) {
@@ -127,99 +120,88 @@ public class KnockKnockClient extends JFrame{
 	        	SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
-					ta.setText(ta.getText() + "Соединение установлено!\n");
+					ta.setText(ta.getText() + "РЎРѕРµРґРёРЅРµРЅРёРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ!\n");
 				}
 			});
 	
 	        
 	        BufferedInputStream bis = new BufferedInputStream(is);
 	        
-	      while (true)
-	      {
-	    	  int len = 0;
-			try {
-				len = bis.read();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	  if (len==0) break;
-	    	  byte[] buffer = new byte[len];
-	    	  try {
-				bis.read(buffer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	  String n1 = new String(buffer);
+	      	while (true)
+	      	{
+	    	  	int len = 0;
+				try {
+					len = bis.read();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    	  	if (len==0) break;
+	    	  	byte[] buffer = new byte[len];
+	    	  	try {
+					bis.read(buffer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	    	  	String n1 = new String(buffer);
 	    	  
-	    	  try {
-				len = bis.read();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	  buffer = new byte[len];
-	    	  try {
-				bis.read(buffer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	  String n2 = new String(buffer);
+	    	  	try {
+					len = bis.read();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    	  	buffer = new byte[len];
+	    	  	try {
+					bis.read(buffer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    	  	String n2 = new String(buffer);
 	    	  
-	    	  
-	    	  final BigNumber number1 = new BigNumber(n1);
-	    	  final BigNumber number2 = new BigNumber(n2);
+	    	  	final BigNumber number1 = new BigNumber(n1);
+	    	  	final BigNumber number2 = new BigNumber(n2);
 	    	  
 		        SwingUtilities.invokeLater(new Runnable() {
 					
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-				    	  ta.setText(ta.getText() + "Получили число"+ number1 +"\n");
-				    	  ta.setText(ta.getText() + "Получили число"+ number2 +"\n");
+				    	  ta.setText(ta.getText() + "РџРѕР»СѓС‡РёР»Рё С‡РёСЃР»Рѕ "+ number1 +"\n");
+				    	  ta.setText(ta.getText() + "РџРѕР»СѓС‡РёР»Рё С‡РёСЃР»Рѕ"+ number2 +"\n");
 					}
 				});
 	    	  
 	    	  
-		      final BigNumber numberRes = number1.multiply(number2);
+		      	final BigNumber numberRes = number1.multiply(number2);
 	    	  
-	    	  try {
-				os.write(numberRes.toString().length());
-				os.write(numberRes.toString().getBytes());
+	    	  	try {
+					os.write(numberRes.toString().length());
+					os.write(numberRes.toString().getBytes());
 				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						ta.setText(ta.getText() + "РћС‚РїСЂР°РІРёР»Рё С‡РёСЃР»Рѕ"+ numberRes +"\n");
+					}
+				});
+	      	}
+		
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					ta.setText(ta.getText() + "Отправили число"+ numberRes +"\n");
-				}
-			});
-	
-	    	  
-	      }
-	       
-
-	    
-	       // System.out.println("Finished");
-	        
-	        SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					ta.setText(ta.getText() + "Работа завершена!...\n");
+					ta.setText(ta.getText() + "Р Р°Р±РѕС‚Р° Р·Р°РІРµСЂС€РµРЅР°!...\n");
 				}
 			});
 
-	        
-	        
 	        try {
 				bis.close();
 				is.close();

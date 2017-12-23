@@ -29,7 +29,6 @@ public class BigNumber {
         char[] mas = s.toCharArray();
         final char zero = '0';
 
-        
         for (int i=mas.length-1;i>=0;i--)
         {
             byte buffer = (byte) ((byte)mas[i] - (byte)zero);
@@ -93,7 +92,6 @@ public class BigNumber {
             {
                 while (index<maxLength)
                 {
-                    
                     byte sum = (byte) (this.number.get(index) + ost);
                     ost = (byte) (sum / 10);
                     newn = (byte) (sum % 10);
@@ -118,7 +116,6 @@ public class BigNumber {
         {
             newList.add(ost);
         }
- 
         
         return new BigNumber(newList);
     }
@@ -166,7 +163,5 @@ public class BigNumber {
         
         return resSum;
     }
-    
-    
     
 }
