@@ -73,8 +73,8 @@ public class KnockKnockClient extends JFrame{
 		public void actionPerformed(ActionEvent e1) {
 			String myserver ="";
 			myserver = tfForSocket.getText().trim(); // notebook_asus
-	    	int port = Integer.parseInt(tfForPort.getText().trim());
-	      	new MainJob(myserver, port).start();			
+	    int port = Integer.parseInt(tfForPort.getText().trim());
+	    new MainJob(myserver, port).start();			
 		}
 			
 	}
@@ -88,14 +88,15 @@ public class KnockKnockClient extends JFrame{
 			this.port = p;
 		}
 		@Override
-		public void run() {
+		public void run() 
+		{
 			
 			Socket kkSocket = null;
 		       
-	        InputStream is = null;
-	        OutputStream os = null;
+	    InputStream is = null;
+	    OutputStream os = null;
 	        
-	        SwingUtilities.invokeLater(new Runnable() {
+	    SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
@@ -103,21 +104,19 @@ public class KnockKnockClient extends JFrame{
 				}
 			});
 	        
+			try {
+					kkSocket = new Socket(myserver, port);
+					is=kkSocket.getInputStream();
+					os=kkSocket.getOutputStream();
+			} catch (UnknownHostException e) {
+					System.err.println("Don't know about host: " + myserver);
+					System.exit(1);
+			} catch (IOException e) {
+					System.err.println("Couldn't get I/O for the connection to: " + myserver);
+					System.exit(1);
+			}
 	        
-	        try {
-	            kkSocket = new Socket(myserver, port);
-				
-	            is=kkSocket.getInputStream();
-	            os=kkSocket.getOutputStream();
-	        } catch (UnknownHostException e) {
-	            System.err.println("Don't know about host: " + myserver);
-	            System.exit(1);
-	        } catch (IOException e) {
-	            System.err.println("Couldn't get I/O for the connection to: " + myserver);
-	            System.exit(1);
-	        }
-	        
-	        	SwingUtilities.invokeLater(new Runnable() {
+	    SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					ta.setText(ta.getText() + "Соединение установлено!\n");
@@ -125,105 +124,106 @@ public class KnockKnockClient extends JFrame{
 			});
 	
 	        
-	        BufferedInputStream bis = new BufferedInputStream(is);
+	    BufferedInputStream bis = new BufferedInputStream(is);
 	        
-	      	while (true)
-	      	{
-	    	  	int len = 0;
+			while (true)
+			{
+				int len = 0;
 				try {
 					len = bis.read();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	    	  	if (len==0) break;
-	    	  	byte[] buffer = new byte[len];
-	    	  	try {
+				if (len==0) break;
+				byte[] buffer = new byte[len];
+				try {
 					bis.read(buffer);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-	    	  	String n1 = new String(buffer);
-	    	  
-	    	  	try {
+				String n1 = new String(buffer);
+
+				try 
+				{
 					len = bis.read();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	    	  	buffer = new byte[len];
-	    	  	try {
-					bis.read(buffer);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	    	  	String n2 = new String(buffer);
-	    	  
-	    	  	final BigNumber number1 = new BigNumber(n1);
-	    	  	final BigNumber number2 = new BigNumber(n2);
-	    	  
-		        SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-				    	  ta.setText(ta.getText() + "Получили число "+ number1 +"\n");
-				    	  ta.setText(ta.getText() + "Получили число"+ number2 +"\n");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				});
-	    	  
-	    	  
-		      	final BigNumber numberRes = number1.multiply(number2);
-	    	  
-	    	  	try {
-					os.write(numberRes.toString().length());
-					os.write(numberRes.toString().getBytes());
-				
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					buffer = new byte[len];
+					try {
+						bis.read(buffer);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					String n2 = new String(buffer);
+
+					final BigNumber number1 = new BigNumber(n1);
+					final BigNumber number2 = new BigNumber(n2);
+
+					SwingUtilities.invokeLater(new Runnable() {
+					
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+									ta.setText(ta.getText() + "Получили число "+ number1 +"\n");
+									ta.setText(ta.getText() + "Получили число"+ number2 +"\n");
+						}
+
+					});
+
+					final BigNumber numberRes = number1.multiply(number2);
+
+					try {
+						os.write(numberRes.toString().length());
+						os.write(numberRes.toString().getBytes());
+					
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							ta.setText(ta.getText() + "Отправили число"+ numberRes +"\n");
+						}
+					});
 				}
-			
+		
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-						ta.setText(ta.getText() + "Отправили число"+ numberRes +"\n");
+						ta.setText(ta.getText() + "Работа завершена!...\n");
 					}
 				});
-	      	}
-		
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					ta.setText(ta.getText() + "Работа завершена!...\n");
-				}
-			});
 
-	        try {
-				bis.close();
-				is.close();
-		        os.close();
-		        kkSocket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+				try {
+					bis.close();
+					is.close();
+					os.close();
+					kkSocket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}		
 	}
 
-	
+		
     public static void main(String[] args) throws Exception {
     	
     	SwingUtilities.invokeLater(new Runnable() {
 			
-			@Override
-			public void run() {
-				new KnockKnockClient();
-			}
-		});
+				@Override
+				public void run() {
+					new KnockKnockClient();
+				}
+			});
     	
     }
     

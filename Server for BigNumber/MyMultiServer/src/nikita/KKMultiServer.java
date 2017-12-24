@@ -141,7 +141,7 @@ public class KKMultiServer extends JFrame {
 			this.list = (ArrayList<String>) list1.clone();
 			this.countOfMachine = countOfPC;
 			this.countForCLear = 0;
-			}
+		}
 		
 		public String[] readCurrentFile() throws IOException
 		{
@@ -181,20 +181,21 @@ public class KKMultiServer extends JFrame {
 	
 	
 	class KKMultiServerThread extends Thread {
-	    private Socket socket = null;
-	    private MyData data = null;
-	    
-	    public KKMultiServerThread(Socket socket,MyData dat) {
-	    super("KKMultiServerThread");
-	    this.socket = socket;
-	    this.data = dat;
-	    System.out.println("Thread created");
-	    }
-	 
-	    public void run() {
-	 
-	    	OutputStream os=null;
-	    	try {
+		private Socket socket = null;
+		private MyData data = null;
+		
+		public KKMultiServerThread(Socket socket,MyData dat) {
+		super("KKMultiServerThread");
+		this.socket = socket;
+		this.data = dat;
+		System.out.println("Thread created");
+		}
+	
+		public void run() 
+		{
+
+			OutputStream os=null;
+			try {
 				os = this.socket.getOutputStream();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -257,7 +258,7 @@ public class KKMultiServer extends JFrame {
 					} 
 				}
 			}
-				
+			
 			synchronized (data) {
 				System.out.println(data.getAnswer());
 				SwingUtilities.invokeLater(new Runnable() {
@@ -268,7 +269,7 @@ public class KKMultiServer extends JFrame {
 					}
 				});
 			}
-			
+
 			try {
 				os.write(0);
 				if (is!=null) is.close();
@@ -277,10 +278,8 @@ public class KKMultiServer extends JFrame {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 			System.out.println("Work performed!");
-	    }
-	    
+		}
 	}
 	
 	
@@ -291,6 +290,7 @@ public class KKMultiServer extends JFrame {
 			public void run() {
 				new KKMultiServer();	
 			}
+
 		});
 	}
 }
